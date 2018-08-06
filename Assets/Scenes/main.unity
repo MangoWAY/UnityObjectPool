@@ -281,7 +281,7 @@ MonoBehaviour:
   PoolSetting:
   - Prefab: {fileID: 1407595097523784, guid: 80573f21bde6ff54aa1775ba2eb9be9e, type: 2}
     Name: Capsule
-    PreCount: 5
+    PreCount: 30
   - Prefab: {fileID: 1600086968261370, guid: ff4b6ccecac82334b8244bb75fb3db5e, type: 2}
     Name: Cube
     PreCount: 5

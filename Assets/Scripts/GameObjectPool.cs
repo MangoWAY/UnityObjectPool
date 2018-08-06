@@ -18,36 +18,56 @@ public class GameObjectPool : MonoBehaviour
 
     private void Start()
     {
-        InitPool();
+        RuntimeInitPool();
         instance = this;
     }
 
     //初始化对象池
-    private void InitPool()
+    public void RuntimeInitPool()
     {
         mPool = new Dictionary<string, List<GameObject>>();
         mDirectory = new Dictionary<string, Transform>();
+        for(int i=0;i<transform.childCount;i++)
+        {
+            mDirectory.Add(transform.GetChild(i).name, transform.GetChild(i));
+            mPool.Add(transform.GetChild(i).name, new List<GameObject>());
+            for(int j=0;j<transform.GetChild(i).childCount; j++)
+            {
+                mPool[transform.GetChild(i).GetChild(j).name].Add(transform.GetChild(i).GetChild(j).gameObject);
+            }
+        }
+      
+    }
+    public void EditorInitPool()
+    {
+        for(int i= transform.childCount-1; i>=0;i--)
+        {
+            DestroyImmediate(transform.GetChild(i).gameObject);    
+        }
         string keyTemp = "";
         for (int i = 0; i < PoolSetting.Length; i++)
         {
             //生成物体对应的目录层级
             keyTemp = PoolSetting[i].Name + "(Clone)";
+            if (transform.Find(keyTemp))
+            {
+                break;
+            }
             GameObject directory = new GameObject();
             directory.transform.SetParent(transform);
             directory.name = keyTemp;
-            mDirectory.Add(keyTemp, directory.transform);
+
 
             //根据设定的大小，生成物体
-            mPool.Add(keyTemp, new List<GameObject>());
             for (int j = 0; j < PoolSetting[i].PreCount; j++)
             {
                 var go = Instantiate(PoolSetting[i].Prefab, directory.transform);
                 go.name = keyTemp;
                 go.SetActive(false);
-                mPool[keyTemp].Add(go);
             }
         }
     }
+
 
     //从对象池里根据名字取物体
     public GameObject GetGameObject(string name)

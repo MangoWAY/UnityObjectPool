@@ -10,7 +10,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace>
     </RootNamespace>
-    <ProjectGuid>{535E9D62-B42C-30F1-36F1-37752E605615}</ProjectGuid>
+    <ProjectGuid>{548C93F7-CA80-A051-43A8-364D16EBA03E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -63,10 +63,10 @@
     <Compile Include="Assets\Scripts\GameObjectPool.cs" />
     <Compile Include="Assets\Scripts\Test.cs" />
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>E:/unityproj/ObjectPool/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>E:/unityproj/UnityObjectPool/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>E:/unityproj/ObjectPool/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>E:/unityproj/UnityObjectPool/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
