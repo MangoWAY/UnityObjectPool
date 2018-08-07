@@ -7,14 +7,15 @@ public class GameObjectPool : MonoBehaviour
     [System.Serializable]
     public struct PoolGameObject
     {
-        public GameObject Prefab;//需要生成的物体
-        public string Name;//物体的名字
-        public int PreCount;//预分配的数量
+        public GameObject Prefab;
+        public string Name;
+        public int PreAllocSize;
+        public int AutoIncreaseSize;
     }
     public PoolGameObject[] PoolSetting;
     public static GameObjectPool instance;
-    private Dictionary<string, List<GameObject>> mPool;//一个key值对应一个list，一个list存一类对象
-    private Dictionary<string, Transform> mDirectory;//一个key对应一个目录，便于管理
+    private Dictionary<string, List<GameObject>> mPool;
+    private Dictionary<string, Transform> mDirectory;
 
     private void Start()
     {
@@ -59,11 +60,28 @@ public class GameObjectPool : MonoBehaviour
 
 
             //根据设定的大小，生成物体
-            for (int j = 0; j < PoolSetting[i].PreCount; j++)
+            for (int j = 0; j < PoolSetting[i].PreAllocSize; j++)
             {
                 var go = Instantiate(PoolSetting[i].Prefab, directory.transform);
                 go.name = keyTemp;
                 go.SetActive(false);
+            }
+        }
+    }
+
+    private void AutoIncrease(string key)
+    {
+        if (mPool[key].Count != 0)
+            return;
+        for (int i = 0; i < PoolSetting.Length; i++)
+        {
+            if (PoolSetting[i].Name + "(Clone)" == key)
+            {
+                for (int j = 0; j < PoolSetting[i].AutoIncreaseSize; j++)
+                {
+                    var go = Instantiate(PoolSetting[i].Prefab, mDirectory[PoolSetting[i].Name + "(Clone)"]);
+                    mPool[go.name].Add(go);
+                }
             }
         }
     }
@@ -73,29 +91,18 @@ public class GameObjectPool : MonoBehaviour
     public GameObject GetGameObject(string name)
     {
         GameObject go = null;
-        string keyTemp = name + "(Clone)";
-        if (!mPool.ContainsKey(keyTemp))
+        string key = name + "(Clone)";
+        if (!mPool.ContainsKey(key))
         {
             Debug.LogError("Get: The pool didn't contanin the key");
             go = null;
         }
-
-        else if (mPool[keyTemp].Count != 0)
-        {
-            go = mPool[keyTemp][0];
-            go.SetActive(true);
-            mPool[keyTemp].RemoveAt(0);
-        }
         else
         {
-            for (int i = 0; i < PoolSetting.Length; i++)
-            {
-                if (PoolSetting[i].Name + "(Clone)" == keyTemp)
-                {
-                    go = Instantiate(PoolSetting[i].Prefab, transform);
-                    break;
-                }
-            }
+            AutoIncrease(key);
+            go = mPool[key][0];
+            go.SetActive(true);
+            mPool[key].RemoveAt(0);
         }
         return go;
     }
